@@ -1097,7 +1097,16 @@ class PFT(nn.Module):
 
         return attn_mask
 
-    def forward(self, x):
+    def forward(self, x, attention=None):
+        # ---------------------------
+        # additional part:
+        # ---------------------------
+        if attention is not None:
+            # Integrate attention into your network
+            # Example: use attention as a mask or guidance
+            x = x * attention.unsqueeze(1)  # Assuming attention is [B, H, W]
+        # ---------------------------
+
         h_ori, w_ori = x.size()[-2], x.size()[-1]
         mod = self.window_size
         h_pad = ((h_ori + mod - 1) // mod) * mod - h_ori
