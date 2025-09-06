@@ -88,13 +88,37 @@ class SRModel(BaseModel):
         self.optimizers.append(self.optimizer_g)
 
     def feed_data(self, data):
+        # self.lq = data['lq'].to(self.device)
+        # if 'gt' in data:
+        #     self.gt = data['gt'].to(self.device)
+
+        # -------------------------------
+        # additional part:
+        # -------------------------------
+        """Feed data to the model including attention maps."""
         self.lq = data['lq'].to(self.device)
-        if 'gt' in data:
-            self.gt = data['gt'].to(self.device)
+        self.gt = data['gt'].to(self.device)
+
+        # Add attention map if available
+        if 'attention' in data:
+            self.attention = data['attention'].to(self.device)
+        else:
+            self.attention = None
+        # -------------------------------
 
     def optimize_parameters(self, current_iter):
+        # -------------------------------
+        # additional part:
+        # -------------------------------
+        # Modify your forward pass to use attention
+        if self.attention is not None:
+            self.output = self.net_g(self.lq, self.attention)
+        else:
+            self.output = self.net_g(self.lq)
+        # --------------------------------
+
         self.optimizer_g.zero_grad()
-        self.output = self.net_g(self.lq)
+        # self.output = self.net_g(self.lq)
 
         l_total = 0
         loss_dict = OrderedDict()
