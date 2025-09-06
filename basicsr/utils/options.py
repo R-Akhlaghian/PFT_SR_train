@@ -165,6 +165,12 @@ def parse_options(root_path, is_train=True):
             dataset['dataroot_gt'] = osp.expanduser(dataset['dataroot_gt'])
         if dataset.get('dataroot_lq') is not None:
             dataset['dataroot_lq'] = osp.expanduser(dataset['dataroot_lq'])
+        # --------------------------------
+        # Add this line for attention maps
+        # --------------------------------
+        if dataset.get('dataroot_attention') is not None:
+            dataset['dataroot_attention'] = osp.expanduser(dataset['dataroot_attention'])
+        # ---------------------------------
 
     # paths
     for key, val in opt['path'].items():
